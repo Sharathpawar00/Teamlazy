@@ -11,5 +11,4 @@ Built with Next.js and deployed on Vercel, the platform is designed to be scalab
 
 
 ## 🏗️ System Architecture
-
-![Future Finance AI Architecture](assets/system-architecture.png)
+![system-architecture](https://github.com/user-attachments/assets/5daec640-57d4-458f-97d0-6b1b59539578)
