@@ -1,10 +1,61 @@
 import express from "express";
 import fetch from "node-fetch";
+import { GMAIL_CLIENT_ID, GMAIL_CLIENT_SECRET, GMAIL_REFRESH_TOKEN, GMAIL_SENDER, GMAIL_APP_SENDER, GMAIL_APP_PASSWORD } from "./gmail.config.js";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static("."));
+
+async function sendResetEmail(email, link) {
+  try {
+    const { google } = await import("googleapis");
+    const nodemailer = (await import("nodemailer")).default;
+    const appSender = GMAIL_APP_SENDER || process.env.GMAIL_APP_SENDER || "";
+    const appPassword = GMAIL_APP_PASSWORD || process.env.GMAIL_APP_PASSWORD || "";
+    let transporter;
+    let sender;
+    if (appSender && appPassword) {
+      sender = appSender;
+      transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: { user: appSender, pass: appPassword },
+      });
+    } else {
+      const clientId = GMAIL_CLIENT_ID || process.env.GMAIL_CLIENT_ID || "";
+      const clientSecret = GMAIL_CLIENT_SECRET || process.env.GMAIL_CLIENT_SECRET || "";
+      const refreshToken = GMAIL_REFRESH_TOKEN || process.env.GMAIL_REFRESH_TOKEN || "";
+      sender = GMAIL_SENDER || process.env.GMAIL_SENDER || "";
+      const oAuth2Client = new google.auth.OAuth2(clientId, clientSecret);
+      oAuth2Client.setCredentials({ refresh_token: refreshToken });
+      const accessToken = await oAuth2Client.getAccessToken();
+      transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          type: "OAuth2",
+          user: sender,
+          clientId,
+          clientSecret,
+          refreshToken,
+          accessToken: accessToken && accessToken.token ? accessToken.token : undefined,
+        },
+      });
+    }
+    const mail = {
+      from: sender,
+      to: email,
+      subject: "Future Finance AI • Password Reset",
+      html: `<p>You requested a password reset.</p><p>Click the link to reset: <a href="${link}">${link}</a></p><p>If you did not request this, ignore this email.</p>`,
+    };
+    await transporter.sendMail(mail);
+    return true;
+  } catch (e) {
+    console.log("Email send failed", e && e.message ? e.message : e);
+    return false;
+  }
+}
 
 const SOURCES = {
   india: [
@@ -128,6 +179,18 @@ app.get("/api/news", async (req, res) => {
 
 app.get("/api/health", (req, res) => {
   res.json({ ok: true, ts: new Date().toISOString() });
+});
+
+app.post("/api/password-reset-request", (req, res) => {
+  const email = (req.body && req.body.email) || "";
+  const token = Math.random().toString(36).slice(2);
+  const link = `http://localhost:${PORT}/reset.html?token=${token}`;
+  console.log(`Password reset requested for ${email}. Link: ${link}`);
+  sendResetEmail(email, link).then(() => {
+    res.json({ ok: true });
+  }).catch(() => {
+    res.json({ ok: true });
+  });
 });
 
 app.listen(PORT, () => {

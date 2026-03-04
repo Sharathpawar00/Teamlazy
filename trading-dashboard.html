@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Future Finance AI • Trading Dashboard</title>
+  <link rel="stylesheet" href="./finance.css" />
+  <link rel="stylesheet" href="./trading-dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <div class="ticker"><div id="globalTicker" class="ticker-track"></div></div>
+  <div class="crumbbar">
+    <button id="tdBack" class="back-btn">← Back</button>
+    <div id="tdCrumbs" class="breadcrumbs">Trading / Dashboard</div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <label class="badge">Workspace Template
+        <select id="tdTemplate">
+          <option value="standard" selected>Standard View</option>
+          <option value="pro">Pro Trader View</option>
+          <option value="news">News Junkie View</option>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="td-app">
+    <header class="td-topbar">
+      <div class="td-left">
+        <button id="tdMenuToggle" class="td-icon">☰</button>
+        <div class="td-logo">Future Finance AI</div>
+      </div>
+      <div class="td-right">
+        <input id="tdSearch" class="td-search" placeholder="Search..." />
+        <div class="td-profile">
+          <button id="tdProfileBtn" class="td-avatar">FF</button>
+          <div id="tdProfileMenu" class="td-menu hidden">
+            <div class="td-menu-item" id="tdProfileView">Profile</div>
+            <div class="td-menu-item" id="tdProfileSettings">Settings</div>
+            <div class="td-menu-item" id="tdLogout">Logout</div>
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="td-layout">
+      <aside id="tdSidebar" class="td-sidebar">
+        <nav class="td-nav">
+          <button data-view="dashboard" class="active">Dashboard</button>
+          <button data-view="portfolio">Portfolio</button>
+          <button data-view="market">Market</button>
+          <button data-view="signals">AI Signals</button>
+          <button data-view="news">News</button>
+          <button data-view="settings">Settings</button>
+        </nav>
+      </aside>
+      <main class="td-main">
+        <section id="view-dashboard" class="td-view">
+          <div class="td-stats">
+            <div class="td-stat td-s1"><div class="td-stat-title">Portfolio</div><div id="tdStat1" class="td-stat-num">₹0</div></div>
+            <div class="td-stat td-s2"><div class="td-stat-title">Day P&L</div><div id="tdStat2" class="td-stat-num">₹0</div></div>
+            <div class="td-stat td-s3"><div class="td-stat-title">Orders</div><div id="tdStat3" class="td-stat-num">0</div></div>
+            <div class="td-stat td-s4"><div class="td-stat-title">Cash</div><div id="tdStat4" class="td-stat-num">₹0</div></div>
+          </div>
+          <div class="td-grid2">
+            <div class="td-card">
+              <div class="td-card-title">Latest Transactions</div>
+              <div class="td-table">
+                <div class="td-row3 td-head"><div>Name</div><div>Amount</div><div>Status</div></div>
+                <div id="tdTxns"></div>
+              </div>
+            </div>
+            <div class="td-card">
+              <div class="td-card-title">Statistics</div>
+              <canvas id="tdStatsChart" width="420" height="240"></canvas>
+            </div>
+          </div>
+          <div class="td-grid2">
+            <div class="td-card">
+              <div class="td-card-title">Balance</div>
+              <div id="tdPortfolioValue" class="td-metric">₹0</div>
+              <canvas id="tdBalanceTrend" width="420" height="120"></canvas>
+              <div class="td-actions"><button id="tdAnalyzeBalance">Analyze</button></div>
+            </div>
+            <div class="td-card">
+              <div class="td-card-title">Balance Details</div>
+              <div id="tdBalanceDetails" class="td-list"></div>
+            </div>
+          </div>
+          <div class="td-card">
+            <div class="td-card-title">Activity</div>
+            <div id="tdActivity" class="td-list"></div>
+          </div>
+          <div class="td-card">
+            <div class="td-card-title">Trending Market News</div>
+            <div id="tdMiniNews" class="mini-news"></div>
+            <div class="mini-news-actions"><a href="finance-news.html" target="_blank">View All News</a></div>
+          </div>
+          <div class="td-grid2">
+            <div class="td-card">
+              <div class="td-card-title">Live Order Book</div>
+              <div id="tdOrderBook" class="td-orderbook"></div>
+            </div>
+            <div class="td-card">
+              <div class="td-card-title">AI Sentinel / Auto-Trader</div>
+              <div class="td-actions"><label class="badge"><input id="tdAutoToggle" type="checkbox" /> Enable AI Auto-Trading</label></div>
+              <div id="tdTerminal" class="td-terminal"></div>
+            </div>
+          </div>
+        </section>
+        <section id="view-portfolio" class="td-view hidden">
+          <div class="td-card">
+            <div class="td-card-title">Holdings</div>
+            <div class="td-table">
+              <div class="td-row td-head">
+                <div>Symbol</div><div>Qty</div><div>Avg</div><div>LTP</div><div>P&L</div>
+              </div>
+              <div id="tdHoldings"></div>
+            </div>
+          </div>
+        </section>
+        <section id="view-market" class="td-view hidden">
+          <div class="td-grid2">
+            <div class="td-card">
+              <div class="td-card-title">Watchlist</div>
+              <div id="tdWatchlist" class="td-list"></div>
+            </div>
+            <div class="td-card">
+              <div class="td-card-title">Top Movers</div>
+              <div id="tdMovers" class="td-list"></div>
+            </div>
+          </div>
+        </section>
+        <section id="view-signals" class="td-view hidden">
+          <div class="td-card">
+            <div class="td-card-title">AI Signals</div>
+            <div id="tdSignals" class="td-list"></div>
+          </div>
+        </section>
+        <section id="view-news" class="td-view hidden">
+          <div class="td-card">
+            <div class="td-card-title">News</div>
+            <div id="tdNews" class="td-list"></div>
+          </div>
+        </section>
+        <section id="view-settings" class="td-view hidden">
+          <div class="td-card">
+            <div class="td-card-title">Settings</div>
+            <div class="td-actions">
+              <button id="tdClear">Clear Local Data</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <button id="aiFab" class="fab"><i class="fa-solid fa-robot"></i></button>
+  <div id="aiCopilot" class="copilot hidden">
+    <div class="copilot-header"><div>AI Financial Copilot</div><button id="aiClose">×</button></div>
+    <div id="aiBody" class="copilot-body"></div>
+    <div class="copilot-input"><input id="aiInput" placeholder="Ask anything..." /><button id="aiSend">Send</button></div>
+  </div>
+  <script src="./trading-dashboard.js"></script>
+</body>
+</html>

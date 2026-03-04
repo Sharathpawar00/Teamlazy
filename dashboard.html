@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Future Finance AI • Investor Dashboard</title>
+  <link rel="stylesheet" href="./dashboard.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="ticker"><div id="globalTicker" class="ticker-track"></div></div>
+  <div class="crumbbar">
+    <button id="dxBack" class="back-btn">← Back</button>
+    <div id="dxCrumbs" class="breadcrumbs">Investor / Advisor</div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <label class="badge">Workspace Template
+        <select id="dxTemplate">
+          <option value="standard" selected>Standard View</option>
+          <option value="pro">Pro Trader View</option>
+          <option value="news">News Junkie View</option>
+        </select>
+      </label>
+    </div>
+  </div>
+  <div class="dx-app">
+    <header class="dx-topbar">
+      <div class="dx-left">
+        <div class="dx-logo">Future Finance AI</div>
+      </div>
+      <div class="dx-right">
+        <input id="dxSearch" class="dx-search" placeholder="Search..." />
+        <button id="dxLogout" class="dx-btn">Logout</button>
+      </div>
+    </header>
+    <div class="dx-layout">
+      <aside class="dx-sidebar" id="dxSidebar">
+        <nav class="dx-nav">
+          <button data-view="advisor" class="active">Smart Advisor</button>
+          <button data-view="ai-pick">AI Pick</button>
+          <button data-view="trade-plan">Trade Plan</button>
+          <button data-view="portfolio">Portfolio Analysis</button>
+          <button data-view="news">News</button>
+          <button data-view="profile">Profile</button>
+          <button data-view="settings">Settings</button>
+        </nav>
+      </aside>
+      <main class="dx-main">
+        <section id="view-advisor" class="dx-view">
+          <div class="dx-grid">
+            <div class="dx-card">
+              <div class="dx-card-title">Inputs</div>
+              <div class="dx-actions"><button id="dxAdvSummary" class="dx-btn">Generate AI Summary</button></div>
+              <div class="dx-grid2">
+                <div class="dx-field"><label>Monthly Income</label><input id="dxIncome" type="number" placeholder="45000" /></div>
+                <div class="dx-field"><label>Monthly Expenses</label><input id="dxExpenses" type="number" placeholder="28000" /></div>
+                <div class="dx-field"><label>Savings</label><input id="dxSavings" type="number" placeholder="120000" /></div>
+                <div class="dx-field"><label>Risk Appetite</label>
+                  <select id="dxRisk"><option>Low</option><option selected>Medium</option><option>High</option></select>
+                </div>
+                <div class="dx-field"><label>Trading Experience</label>
+                  <select id="dxExp"><option>Beginner</option><option selected>Intermediate</option><option>Pro</option></select>
+                </div>
+              </div>
+              <div class="dx-actions"><button id="dxAdvise" class="dx-btn">Generate Plan</button></div>
+              <div id="dxAdvOut" class="dx-note"></div>
+            </div>
+            <div class="dx-card">
+              <div class="dx-card-title">Trending Market News</div>
+              <div id="dxMiniNews" class="mini-news"></div>
+              <div class="mini-news-actions"><a href="finance-news.html" target="_blank">View All News</a></div>
+            </div>
+            <div class="dx-card">
+              <div class="dx-card-title">Allocation</div>
+              <div id="dxAllocBars" class="dx-bars"></div>
+              <div id="dxAllocTable" class="dx-list"></div>
+            </div>
+            <div class="dx-card">
+              <div class="dx-card-title">Summary</div>
+              <div class="dx-grid2">
+                <div class="dx-kpi"><div class="dx-kpi-title">Investable Surplus</div><div id="dxSurplus" class="dx-kpi-num">₹0</div></div>
+                <div class="dx-kpi"><div class="dx-kpi-title">Expected Annual Return</div><div id="dxExpected" class="dx-kpi-num">0%</div></div>
+                <div class="dx-kpi"><div class="dx-kpi-title">Diversification Score</div><div id="dxDivScore" class="dx-kpi-num">0</div></div>
+                <div class="dx-kpi"><div class="dx-kpi-title">Emergency Fund</div><div id="dxEmergencyNeed" class="dx-kpi-num">₹0</div></div>
+              </div>
+              <div id="dxRiskExplain" class="dx-note"></div>
+              <div id="dxAdvOut" class="dx-note"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-ai-pick" class="dx-view hidden">
+          <div class="dx-grid">
+            <div class="dx-card">
+              <div class="dx-card-title">AI Pick of the Week</div>
+              <div id="dxPickHeader" class="dx-pick"></div>
+              <div class="dx-grid2">
+                <div class="dx-list" id="dxTech"></div>
+                <div class="dx-list" id="dxSignal"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-trade-plan" class="dx-view hidden">
+          <div class="dx-card">
+            <div class="dx-card-title">Trade Plan Generator</div>
+            <div class="dx-grid3">
+              <div class="dx-field"><label>Trading Capital</label><input id="dxCapital" type="number" placeholder="100000" /></div>
+              <div class="dx-field"><label>Risk Per Trade (%)</label><input id="dxRiskPct" type="number" value="2" min="0.5" max="5" step="0.5" /></div>
+              <div class="dx-field"><label>Stop Distance (₹)</label><input id="dxStopDist" type="number" placeholder="12" /></div>
+            </div>
+            <div class="dx-actions"><button id="dxBuildPlan" class="dx-btn">Build Plan</button></div>
+            <div id="dxPlan" class="dx-list"></div>
+          </div>
+        </section>
+
+        <section id="view-portfolio" class="dx-view hidden">
+          <div class="dx-grid">
+            <div class="dx-card">
+              <div class="dx-card-title">Portfolio Analysis</div>
+              <div class="dx-actions"><button id="dxPortSummary" class="dx-btn">Generate AI Summary</button></div>
+              <div id="dxPortfolioSummary" class="dx-grid2"></div>
+              <div id="dxPortfolioSectors" class="dx-list"></div>
+              <div id="dxPortfolioAdvice" class="dx-list"></div>
+              <div id="dxPortOut" class="dx-note"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="view-news" class="dx-view hidden">
+          <div class="dx-card">
+            <div class="dx-card-title">Finance News</div>
+            <div class="dx-actions"><button onclick="window.open('finance-news.html','_blank')" class="dx-btn">Open News Hub</button></div>
+          </div>
+        </section>
+
+        <section id="view-settings" class="dx-view hidden">
+          <div class="dx-card">
+            <div class="dx-card-title">Settings</div>
+            <div class="dx-actions"><button id="dxClear" class="dx-btn">Clear Local Data</button></div>
+          </div>
+        </section>
+        <section id="view-profile" class="dx-view hidden">
+          <div class="dx-card">
+            <div class="dx-card-title">Account</div>
+            <div class="dx-grid2">
+              <div class="dx-kpi"><div class="dx-kpi-title">User</div><div id="dxUserName" class="dx-kpi-num">-</div></div>
+              <div class="dx-kpi"><div class="dx-kpi-title">Session</div><div id="dxSessionType" class="dx-kpi-num">-</div></div>
+            </div>
+            <div class="dx-actions">
+              <button id="dxSyncFinance" class="dx-btn">Sync Finance Profile</button>
+              <button onclick="window.open('finance.html','_blank')" class="dx-btn">Open Finance App</button>
+            </div>
+          </div>
+          <div class="dx-card">
+            <div class="dx-card-title">Financial Snapshot</div>
+            <div class="dx-grid3">
+              <div class="dx-kpi"><div class="dx-kpi-title">Income</div><div id="dxSnapIncome" class="dx-kpi-num">₹0</div></div>
+              <div class="dx-kpi"><div class="dx-kpi-title">Expenses</div><div id="dxSnapExpenses" class="dx-kpi-num">₹0</div></div>
+              <div class="dx-kpi"><div class="dx-kpi-title">Savings</div><div id="dxSnapSavings" class="dx-kpi-num">₹0</div></div>
+              <div class="dx-kpi"><div class="dx-kpi-title">Emergency</div><div id="dxSnapEmergency" class="dx-kpi-num">₹0</div></div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+  <button id="aiFab" class="fab"><i class="fa-solid fa-robot"></i></button>
+  <div id="aiCopilot" class="copilot hidden">
+    <div class="copilot-header"><div>AI Financial Copilot</div><button id="aiClose">×</button></div>
+    <div id="aiBody" class="copilot-body"></div>
+    <div class="copilot-input"><input id="aiInput" placeholder="Ask anything..." /><button id="aiSend">Send</button></div>
+  </div>
+  <script src="./dashboard.js"></script>
+</body>
+</html>

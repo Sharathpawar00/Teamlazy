@@ -5,8 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Future Finance AI</title>
   <link rel="stylesheet" href="./finance.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+  <div class="ticker"><div id="globalTicker" class="ticker-track"></div></div>
+  <div class="crumbbar">
+    <button id="ffBack" class="back-btn">← Back</button>
+    <div id="ffCrumbs" class="breadcrumbs">Home / Dashboard</div>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <label class="badge">Workspace Template
+        <select id="ffTemplate">
+          <option value="standard" selected>Standard View</option>
+          <option value="pro">Pro Trader View</option>
+          <option value="news">News Junkie View</option>
+        </select>
+      </label>
+    </div>
+  </div>
   <div class="ff-app">
     <header class="ff-header">
       <h1>Future Finance AI</h1>
@@ -18,6 +34,7 @@
         <button data-tab="simulator">Simulator</button>
         <button data-tab="goals">Goals</button>
         <button data-tab="news">Finance News</button>
+        <button data-tab="intelligence">Market Intelligence</button>
         <button data-tab="settings">Settings</button>
       </nav>
     </header>
@@ -26,6 +43,7 @@
       <section id="tab-dashboard" class="ff-tab">
         <div class="ff-card">
           <h2>Financial Profile</h2>
+          <div class="ff-actions"><button id="aiDashSummary">Generate AI Summary</button></div>
           <div class="ff-grid">
             <div class="ff-field">
               <label>Monthly Income</label>
@@ -48,6 +66,7 @@
             <button id="saveProfile">Save Profile</button>
             <button id="recomputeScore">Recompute Health</button>
           </div>
+          <div id="aiDashOut" class="ff-answer shimmer"></div>
         </div>
         <div class="ff-cards">
           <div class="ff-card">
@@ -65,11 +84,17 @@
           <div class="ff-card">
             <h3>Net Worth</h3>
             <div class="ff-grid">
-              <div><label>Total Assets</label><div id="totalAssets">0</div></div>
-              <div><label>Total Liabilities</label><div id="totalLiabilities">0</div></div>
-              <div><label>Net Worth</label><div id="netWorth">0</div></div>
+              <div><label class="tip" data-tip="Total of all assets you own">Total Assets</label><div id="totalAssets">0</div></div>
+              <div><label class="tip" data-tip="Outstanding debts and obligations">Total Liabilities</label><div id="totalLiabilities">0</div></div>
+              <div><label class="tip" data-tip="Assets minus liabilities">Net Worth</label><div id="netWorth">0</div></div>
             </div>
             <canvas id="assetChart" width="360" height="200"></canvas>
+            <div class="ff-actions"><button id="ffAnalyzeNet">Analyze</button></div>
+          </div>
+          <div class="ff-card">
+            <h3>Trending Market News</h3>
+            <div id="ffMiniNews" class="mini-news"></div>
+            <div class="mini-news-actions"><a href="finance-news.html" target="_blank">View All News</a></div>
           </div>
         </div>
       </section>
@@ -134,6 +159,7 @@
       <section id="tab-assets" class="ff-tab hidden">
         <div class="ff-card">
           <h2>Add Asset</h2>
+          <div class="ff-actions"><button id="aiPortfolioSummary">Generate AI Summary</button></div>
           <div class="ff-grid">
             <div class="ff-field"><label>Category</label>
               <select id="assetCategory">
@@ -150,6 +176,7 @@
             <div class="ff-field"><label>Value</label><input type="number" id="assetValue" min="0" /></div>
           </div>
           <div class="ff-actions"><button id="addAsset">Add</button></div>
+          <div id="aiPortfolioOut" class="ff-answer shimmer"></div>
         </div>
         <div class="ff-card">
           <h3>Your Assets</h3>
@@ -172,6 +199,7 @@
           </div>
           <div class="ff-actions"><button id="runSim">Run Simulation</button></div>
           <div id="simResult" class="ff-answer"></div>
+          <canvas id="simChart" width="480" height="200"></canvas>
         </div>
       </section>
 
@@ -184,6 +212,7 @@
             <div class="ff-field"><label>Target Date</label><input type="date" id="goalDate" /></div>
           </div>
           <div class="ff-actions"><button id="addGoal">Create Goal</button></div>
+          <canvas id="goalsChart" width="480" height="200"></canvas>
         </div>
         <div class="ff-card">
           <h3>Your Goals</h3>
@@ -217,17 +246,187 @@
         </div>
       </section>
 
+      <section id="tab-intelligence" class="ff-tab hidden">
+        <div class="ff-card glass">
+          <h2>Daily Market Summary</h2>
+          <div class="ff-grid">
+            <div><label>Overview</label><div id="miOverview" class="ff-answer"></div></div>
+            <div><label>Volatility</label><div id="miVol" class="badge"></div></div>
+            <div><label>Bias</label><div id="miBias" class="badge"></div></div>
+            <div><label>Confidence</label><div id="miConf" class="badge ok"></div></div>
+          </div>
+          <div class="ff-actions"><div id="miUpdated" class="badge">Updated</div></div>
+        </div>
+        <div class="ff-card glass">
+          <h3>Breaking News</h3>
+          <div id="miNewsList" class="ff-list"></div>
+        </div>
+        <div class="ff-card glass">
+          <h3>AI Actions From News</h3>
+          <div class="ff-actions"><button id="miGenNewsActions">Generate Actions</button></div>
+          <div id="miNewsActions" class="ff-list"></div>
+        </div>
+        <div class="ff-card glass">
+          <h3>Stock of the Day</h3>
+          <div class="ff-grid">
+            <div><label>Symbol</label><div id="miPickSymbol" class="badge"></div></div>
+            <div><label>Signal</label><div id="miPickSignal" class="badge"></div></div>
+            <div><label>Confidence</label><div id="miPickConf" class="badge ok"></div></div>
+          </div>
+          <div class="ff-actions">
+            <label class="badge"><input id="miAuto" type="checkbox" checked /> Auto refresh</label>
+            <label class="badge">
+              Timeframe
+              <select id="miTF">
+                <option value="D" selected>Daily</option>
+                <option value="240">4H</option>
+                <option value="60">1H</option>
+                <option value="15">15m</option>
+              </select>
+            </label>
+            <button id="miCopyPlan">Copy Plan</button>
+          </div>
+          <div class="ff-grid">
+            <div><label>RSI</label><div id="miRSI"></div></div>
+            <div><label>MA50</label><div id="miMA50"></div></div>
+            <div><label>MA200</label><div id="miMA200"></div></div>
+            <div><label>Volume</label><div id="miVolStrength"></div></div>
+            <div><label>Trend</label><div id="miTrend"></div></div>
+            <div><label>Volatility</label><div id="miVolScore"></div></div>
+          </div>
+          <div class="ff-grid">
+            <div><label>Entry</label><div id="miEntry"></div></div>
+            <div><label>Target</label><div id="miTarget"></div></div>
+            <div><label>Stoploss</label><div id="miStop"></div></div>
+            <div><label>Risk-Reward</label><div id="miRR"></div></div>
+            <div><label>Holding</label><div id="miHold"></div></div>
+          </div>
+          <div class="ff-grid">
+            <div><label>Sparkline</label><canvas id="miSpark" width="360" height="80"></canvas></div>
+            <div><label>Sentiment</label><div id="miSentSummary" class="ff-list"></div></div>
+          </div>
+        </div>
+        <div class="ff-card glass">
+          <h3>Trade Plan Engine</h3>
+          <div class="ff-grid">
+            <div class="ff-field"><label>Available Capital</label><input id="miCapital" type="number" placeholder="100000" /></div>
+          </div>
+          <div class="ff-actions"><button id="miBuildPlan">Calculate Plan</button></div>
+          <div id="miPlan" class="ff-list"></div>
+        </div>
+        <div class="ff-card glass">
+          <h3>Live Stock Chart</h3>
+          <div class="ff-grid">
+            <div class="ff-field">
+              <label>Symbol</label>
+              <select id="miSymbol">
+                <option>NSE:RELIANCE</option>
+                <option>NSE:TCS</option>
+                <option>NSE:INFY</option>
+                <option>NSE:HDFCBANK</option>
+                <option>NSE:SBIN</option>
+                <option>NSE:ITC</option>
+                <option>NSE:ADANIPORTS</option>
+                <option>NASDAQ:AAPL</option>
+                <option>NASDAQ:TSLA</option>
+                <option>NASDAQ:NVDA</option>
+                <option>NASDAQ:GOOGL</option>
+              </select>
+            </div>
+            <div class="ff-field">
+              <label>Add custom symbol</label>
+              <div class="ff-actions">
+                <input id="miCustomSymbol" placeholder="e.g., NSE:AXISBANK" />
+                <button id="miAddSymbol">Add</button>
+              </div>
+            </div>
+          </div>
+          <div id="miChart" style="height:480px;"></div>
+        </div>
+        <div class="ff-card glass">
+          <h3>Risk Heatmap</h3>
+          <div id="miRiskBox" class="heat">
+            <div id="miRiskFill" class="heat-fill" style="width:0%"></div>
+          </div>
+          <div id="miRiskLabel" class="badge">Risk</div>
+        </div>
+        <div class="ff-card glass">
+          <h3>Matched Stocks From News</h3>
+          <div id="miMatched" class="ff-list"></div>
+        </div>
+        <div class="ff-card glass">
+          <h3>Allocation Planner</h3>
+          <div class="ff-grid">
+            <div class="ff-field"><label>Risk Appetite</label>
+              <select id="miAllocRisk"><option>Low</option><option selected>Medium</option><option>High</option></select>
+            </div>
+            <div class="ff-field"><label>Equity Budget (₹)</label><input id="miAllocBudget" type="number" placeholder="100000" /></div>
+          </div>
+          <div class="ff-actions">
+            <button id="miGenAlloc">Generate Allocation Plan</button>
+            <button id="miCopyAlloc">Copy Allocation</button>
+          </div>
+          <div id="miAllocList" class="ff-list"></div>
+        </div>
+        <div class="ff-card glass">
+          <h3>Portfolio Impact</h3>
+          <div id="miImpact" class="ff-list"></div>
+        </div>
+        <div class="ff-card glass">
+          <h3>Macro Indicators</h3>
+          <div id="miMacroList" class="ff-list"></div>
+        </div>
+        <div class="ff-card glass">
+          <h3>FX & Commodities Snapshot</h3>
+          <div id="miFxCommoList" class="ff-list"></div>
+        </div>
+        <div class="ff-card glass">
+          <h3>SIP Suggestion</h3>
+          <div id="miSIP" class="ff-answer"></div>
+        </div>
+        <div class="ff-card glass">
+          <h3>EMI Impact Estimator</h3>
+          <div class="ff-grid">
+            <div class="ff-field"><label>Repo change (bps)</label><input id="miRepoDelta" type="number" value="25" /></div>
+          </div>
+          <div class="ff-actions"><button id="miCalcEmi">Estimate EMI Impact</button></div>
+          <div id="miEMIImpact" class="ff-answer"></div>
+        </div>
+        <div class="ff-card glass">
+          <h3>Tax Change Simulator</h3>
+          <div class="ff-grid">
+            <div class="ff-field"><label>Tax change (%)</label><input id="miTaxPct" type="number" value="2" /></div>
+          </div>
+          <div class="ff-actions"><button id="miApplyTax">Apply</button></div>
+          <div id="miTaxResult" class="ff-answer"></div>
+        </div>
+      </section>
       <section id="tab-settings" class="ff-tab hidden">
         <div class="ff-card">
           <h2>Settings</h2>
           <div class="ff-actions">
             <button id="clearData">Clear All Data</button>
+            <button id="logout">Logout</button>
+            <button onclick="window.open('trading-dashboard.html','_blank')">Open Trading Dashboard</button>
+            <button onclick="window.open('dashboard.html','_blank')">Open AI Investor Dashboard</button>
           </div>
         </div>
       </section>
     </main>
   </div>
+  <button id="aiFab" class="fab"><i class="fa-solid fa-robot"></i></button>
+  <div id="aiCopilot" class="copilot hidden">
+    <div class="copilot-header"><div>AI Financial Copilot</div><button id="aiClose">×</button></div>
+    <div id="aiBody" class="copilot-body"></div>
+    <div class="copilot-input"><input id="aiInput" placeholder="Ask anything..." /><button id="aiSend">Send</button></div>
+  </div>
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-head"><div id="modalTitle"></div><button id="modalClose" class="modal-close">Close</button></div>
+      <div id="modalBody"></div>
+      <canvas id="modalChart" width="520" height="220"></canvas>
+    </div>
+  </div>
 
   <script src="./finance.js"></script>
 </body>
-</html>

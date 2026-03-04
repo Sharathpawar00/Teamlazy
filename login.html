@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login • Future Finance AI</title>
+  <link rel="stylesheet" href="./finance.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    .auth-wrap { max-width: 420px; margin: 80px auto; padding: 0 16px; }
+    .auth-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .auth-title { margin: 0 0 12px 0; font-size: 24px; color: var(--gold); text-align: center; }
+    .auth-sub { margin: 0 0 16px 0; color: var(--muted); text-align: center; }
+    .auth-grid { display: grid; gap: 10px; }
+    .auth-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+    .auth-actions .left { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 12px; }
+    .auth-actions input[type="checkbox"] { accent-color: var(--gold); }
+    .auth-actions button { padding: 10px 14px; border: 1px solid var(--border); background: #0f1520; color: var(--text); border-radius: 8px; cursor: pointer; }
+    .auth-actions button:hover { border-color: var(--gold); }
+    .brand { text-align: center; margin-top: 14px; color: var(--muted); font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="ticker"><div id="globalTicker" class="ticker-track"></div></div>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h1 class="auth-title">Sign In</h1>
+      <p class="auth-sub">Access your finance dashboard</p>
+      <div class="auth-grid">
+        <div class="ff-field">
+          <label>Username or Email</label>
+          <input id="authUser" type="text" placeholder="you@example.com" />
+        </div>
+        <div class="ff-field">
+          <label>Password</label>
+          <input id="authPass" type="password" placeholder="Enter password" />
+        </div>
+      </div>
+      <div class="auth-actions">
+        <label class="left"><input id="rememberMe" type="checkbox" /> Remember me</label>
+        <button id="doLogin">Login</button>
+      </div>
+      <div class="auth-actions">
+        <a href="forgot.html" style="color: var(--muted); text-decoration: none;">Forgot password?</a>
+      </div>
+    </div>
+    <div class="brand">Future Finance AI</div>
+  </div>
+  <button id="aiFab" class="fab"><i class="fa-solid fa-robot"></i></button>
+  <div id="aiCopilot" class="copilot hidden">
+    <div class="copilot-header"><div>AI Financial Copilot</div><button id="aiClose">×</button></div>
+    <div id="aiBody" class="copilot-body"></div>
+    <div class="copilot-input"><input id="aiInput" placeholder="Ask anything..." /><button id="aiSend">Send</button></div>
+  </div>
+  <script src="./login.js"></script>
+</body>
+</html>

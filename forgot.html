@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forgot Password • Future Finance AI</title>
+  <link rel="stylesheet" href="./finance.css" />
+  <style>
+    .auth-wrap { max-width: 420px; margin: 80px auto; padding: 0 16px; }
+    .auth-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+    .auth-title { margin: 0 0 12px 0; font-size: 24px; color: var(--gold); text-align: center; }
+    .auth-sub { margin: 0 0 16px 0; color: var(--muted); text-align: center; }
+    .auth-grid { display: grid; gap: 10px; }
+    .auth-actions { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+    .auth-actions button { padding: 10px 14px; border: 1px solid var(--border); background: #0f1520; color: var(--text); border-radius: 8px; cursor: pointer; }
+    .auth-actions button:hover { border-color: var(--gold); }
+    .brand { text-align: center; margin-top: 14px; color: var(--muted); font-size: 12px; }
+    .muted { color: var(--muted); text-decoration: none; }
+    .msg { margin-top: 12px; color: var(--muted); font-size: 14px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <h1 class="auth-title">Forgot Password</h1>
+      <p class="auth-sub">Enter your email to receive a reset link</p>
+      <div class="auth-grid">
+        <div class="ff-field">
+          <label>Email</label>
+          <input id="fpEmail" type="email" placeholder="you@example.com" />
+        </div>
+      </div>
+      <div class="auth-actions">
+        <a class="muted" href="login.html">Back to Login</a>
+        <button id="sendReset">Send Reset Link</button>
+      </div>
+      <div id="fpMsg" class="msg"></div>
+    </div>
+    <div class="brand">Future Finance AI</div>
+  </div>
+  <script src="./forgot.js"></script>
+</body>
+</html>
