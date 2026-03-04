@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Finance News Hub</title>
+  <link rel="stylesheet" href="./finance-news.css" />
+</head>
+<body>
+  <div class="hub">
+    <header class="hub-header">
+      <h1>Finance News Hub</h1>
+      <div class="hub-actions">
+        <button onclick="window.location.href='finance.html'">Back to Finance App</button>
+      </div>
+    </header>
+    <section class="hub-controls">
+      <div class="grid">
+        <div class="field">
+          <label>Region</label>
+          <select id="region">
+            <option value="india" selected>India</option>
+            <option value="global">Global</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Search</label>
+          <input id="search" placeholder="Search keywords e.g. budget, stocks, EMI" />
+        </div>
+        <div class="field">
+          <label>Categories</label>
+          <div class="tags" id="tagFilter">
+            <span data-tag="budget" class="tag">Budget</span>
+            <span data-tag="tax" class="tag">Tax</span>
+            <span data-tag="rbi" class="tag">RBI</span>
+            <span data-tag="inflation" class="tag">Inflation</span>
+            <span data-tag="stocks" class="tag">Stocks</span>
+            <span data-tag="mutual" class="tag">Mutual Funds</span>
+            <span data-tag="crypto" class="tag">Crypto</span>
+            <span data-tag="loan" class="tag">Loans/EMI</span>
+            <span data-tag="fuel" class="tag">Fuel</span>
+            <span data-tag="property" class="tag">Property</span>
+            <span data-tag="gold" class="tag">Gold</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>&nbsp;</label>
+          <div class="buttons">
+            <button id="refresh">Refresh</button>
+            <button id="summarize">Summarize Latest</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="hub-feed">
+      <div id="feed" class="list"></div>
+    </section>
+  </div>
+  <script src="./finance-news.js"></script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Future Finance AI</title>
+  <link rel="stylesheet" href="./finance.css" />
+</head>
+<body>
+  <div class="ff-app">
+    <header class="ff-header">
+      <h1>Future Finance AI</h1>
+      <nav class="ff-nav">
+        <button data-tab="dashboard" class="active">Dashboard</button>
+        <button data-tab="advisor">AI Advisor</button>
+        <button data-tab="debts">Debts</button>
+        <button data-tab="assets">Assets</button>
+        <button data-tab="simulator">Simulator</button>
+        <button data-tab="goals">Goals</button>
+        <button data-tab="news">Finance News</button>
+        <button data-tab="settings">Settings</button>
+      </nav>
+    </header>
+
+    <main class="ff-main">
+      <section id="tab-dashboard" class="ff-tab">
+        <div class="ff-card">
+          <h2>Financial Profile</h2>
+          <div class="ff-grid">
+            <div class="ff-field">
+              <label>Monthly Income</label>
+              <input type="number" id="income" min="0" />
+            </div>
+            <div class="ff-field">
+              <label>Monthly Expenses</label>
+              <input type="number" id="expenses" min="0" />
+            </div>
+            <div class="ff-field">
+              <label>Savings</label>
+              <input type="number" id="savings" min="0" />
+            </div>
+            <div class="ff-field">
+              <label>Emergency Fund</label>
+              <input type="number" id="emergency" min="0" />
+            </div>
+          </div>
+          <div class="ff-actions">
+            <button id="saveProfile">Save Profile</button>
+            <button id="recomputeScore">Recompute Health</button>
+          </div>
+        </div>
+        <div class="ff-cards">
+          <div class="ff-card">
+            <h3>Financial Health</h3>
+            <div class="ff-health">
+              <div class="ff-score"><span id="healthScore">0</span>/100</div>
+              <div class="ff-status" id="healthStatus">Unknown</div>
+              <div class="ff-breakdown" id="healthBreakdown"></div>
+            </div>
+          </div>
+          <div class="ff-card">
+            <h3>Risk Alerts</h3>
+            <ul id="riskAlerts" class="ff-list"></ul>
+          </div>
+          <div class="ff-card">
+            <h3>Net Worth</h3>
+            <div class="ff-grid">
+              <div><label>Total Assets</label><div id="totalAssets">0</div></div>
+              <div><label>Total Liabilities</label><div id="totalLiabilities">0</div></div>
+              <div><label>Net Worth</label><div id="netWorth">0</div></div>
+            </div>
+            <canvas id="assetChart" width="360" height="200"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-advisor" class="ff-tab hidden">
+        <div class="ff-card">
+          <h2>Ask AI Advisor</h2>
+          <textarea id="advisorQuestion" placeholder="Ask about purchases, savings, EMI safety, etc."></textarea>
+          <div class="ff-actions">
+            <button id="askAdvisor">Ask</button>
+          </div>
+          <div id="advisorAnswer" class="ff-answer"></div>
+        </div>
+        <div class="ff-card">
+          <h3>Smart Purchase Advisor</h3>
+          <div class="ff-grid">
+            <div class="ff-field"><label>Item Name</label><input id="purchaseName" /></div>
+            <div class="ff-field"><label>Price</label><input type="number" id="purchasePrice" min="0" /></div>
+          </div>
+          <div class="ff-actions"><button id="evaluatePurchase">Evaluate</button></div>
+          <div id="purchaseResult" class="ff-answer"></div>
+        </div>
+      </section>
+
+      <section id="tab-debts" class="ff-tab hidden">
+        <div class="ff-card">
+          <h2>Add Debt</h2>
+          <div class="ff-grid">
+            <div class="ff-field"><label>Type</label>
+              <select id="debtType">
+                <option>Personal loan</option>
+                <option>Credit card</option>
+                <option>EMI</option>
+                <option>Education loan</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="ff-field"><label>Loan Amount</label><input type="number" id="debtAmount" min="0" /></div>
+            <div class="ff-field"><label>Monthly EMI</label><input type="number" id="debtEmi" min="0" /></div>
+            <div class="ff-field"><label>Interest Rate (%)</label><input type="number" id="debtRate" min="0" step="0.1" /></div>
+          </div>
+          <div class="ff-actions"><button id="addDebt">Add</button></div>
+        </div>
+        <div class="ff-card">
+          <h3>Your Debts</h3>
+          <div class="ff-grid">
+            <div><label>DTI</label><div id="dtiValue">0%</div></div>
+            <div><label>Risk</label><div id="dtiRisk">Safe</div></div>
+          </div>
+          <div id="debtList" class="ff-list"></div>
+        </div>
+        <div class="ff-card">
+          <h3>Payoff Strategy</h3>
+          <div class="ff-actions">
+            <button id="strategySnowball">Snowball</button>
+            <button id="strategyAvalanche">Avalanche</button>
+          </div>
+          <div id="strategyOutput" class="ff-answer"></div>
+        </div>
+      </section>
+
+      <section id="tab-assets" class="ff-tab hidden">
+        <div class="ff-card">
+          <h2>Add Asset</h2>
+          <div class="ff-grid">
+            <div class="ff-field"><label>Category</label>
+              <select id="assetCategory">
+                <option>Bank</option>
+                <option>Gold</option>
+                <option>Stocks</option>
+                <option>Mutual funds</option>
+                <option>Property</option>
+                <option>Crypto</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="ff-field"><label>Name</label><input id="assetName" /></div>
+            <div class="ff-field"><label>Value</label><input type="number" id="assetValue" min="0" /></div>
+          </div>
+          <div class="ff-actions"><button id="addAsset">Add</button></div>
+        </div>
+        <div class="ff-card">
+          <h3>Your Assets</h3>
+          <div id="assetList" class="ff-list"></div>
+        </div>
+      </section>
+
+      <section id="tab-simulator" class="ff-tab hidden">
+        <div class="ff-card">
+          <h2>What-If Simulator</h2>
+          <div class="ff-grid">
+            <div class="ff-field"><label>Scenario</label>
+              <select id="simType">
+                <option>Buy Item</option>
+                <option>Increase Savings</option>
+                <option>Add Debt</option>
+              </select>
+            </div>
+            <div class="ff-field"><label>Amount</label><input type="number" id="simAmount" min="0" /></div>
+          </div>
+          <div class="ff-actions"><button id="runSim">Run Simulation</button></div>
+          <div id="simResult" class="ff-answer"></div>
+        </div>
+      </section>
+
+      <section id="tab-goals" class="ff-tab hidden">
+        <div class="ff-card">
+          <h2>Goal Planning</h2>
+          <div class="ff-grid">
+            <div class="ff-field"><label>Goal Title</label><input id="goalTitle" /></div>
+            <div class="ff-field"><label>Target Amount</label><input type="number" id="goalAmount" min="0" /></div>
+            <div class="ff-field"><label>Target Date</label><input type="date" id="goalDate" /></div>
+          </div>
+          <div class="ff-actions"><button id="addGoal">Create Goal</button></div>
+        </div>
+        <div class="ff-card">
+          <h3>Your Goals</h3>
+          <div id="goalList" class="ff-list"></div>
+        </div>
+      </section>
+
+      <section id="tab-news" class="ff-tab hidden">
+        <div class="ff-card">
+          <h2>Finance News</h2>
+          <div class="ff-grid">
+            <div class="ff-field"><label>Region</label>
+              <select id="newsRegion">
+                <option value="india" selected>India</option>
+                <option value="global">Global</option>
+              </select>
+            </div>
+            <div class="ff-field"><label>Keywords</label><input id="newsKeywords" placeholder="budget,tax,rbi,inflation,fuel,emi" /></div>
+          </div>
+          <div class="ff-actions">
+            <button id="refreshNews">Refresh Now</button>
+            <button id="summarizeLatest">Summarize Latest</button>
+          </div>
+        </div>
+        <div class="ff-card">
+          <h3>Feed</h3>
+          <div id="newsList" class="ff-list"></div>
+          <div class="ff-actions">
+            <button onclick="window.open('finance-news.html','_blank')">Open Full News Hub</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-settings" class="ff-tab hidden">
+        <div class="ff-card">
+          <h2>Settings</h2>
+          <div class="ff-actions">
+            <button id="clearData">Clear All Data</button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./finance.js"></script>
+</body>
+</html>

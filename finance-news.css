@@ -1,0 +1,32 @@
+:root {
+  --bg: #0f131a;
+  --panel: #151a22;
+  --text: #eef2f7;
+  --muted: #9aa3b2;
+  --border: #222a36;
+  --gold: #d4af37;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif; }
+.hub { max-width: 1200px; margin: 0 auto; padding: 24px; }
+.hub-header { display: flex; align-items: center; justify-content: space-between; }
+.hub-header h1 { margin: 0; color: var(--gold); font-size: 26px; }
+.hub-actions button { padding: 8px 12px; border: 1px solid var(--border); background: #0d1218; color: var(--text); border-radius: 8px; cursor: pointer; }
+.hub-controls { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-top: 16px; }
+.grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { color: var(--muted); font-size: 12px; }
+.field input, .field select { background: #0d1218; color: var(--text); border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { padding: 6px 10px; border: 1px solid var(--border); border-radius: 999px; font-size: 12px; cursor: pointer; }
+.tag.active { border-color: var(--gold); color: var(--gold); }
+.buttons button { padding: 10px 14px; border: 1px solid var(--border); background: #0f1520; color: var(--text); border-radius: 8px; cursor: pointer; }
+.hub-feed { margin-top: 16px; }
+.list { display: grid; gap: 10px; }
+.item { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: start; background: #0d1218; border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
+.item .title { font-weight: 700; }
+.item .meta { color: var(--muted); font-size: 12px; margin-top: 6px; }
+.item .right { display: flex; gap: 8px; align-items: center; }
+.badge { padding: 2px 8px; border-radius: 999px; font-size: 11px; border: 1px solid var(--border); }
+.badge.cat { color: var(--gold); border-color: #3a2f10; }
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
